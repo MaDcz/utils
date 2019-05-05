@@ -1,11 +1,11 @@
-#include "ui/dialog.hpp"
+#include "gui/dialog.hpp"
 
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
 
 #include <assert.h>
 
-namespace mad { namespace utils { namespace ui {
+namespace mad { namespace utils { namespace gui {
 
 Dialog::Dialog(QWidget* parent)
   : QDialog(parent)
@@ -38,4 +38,4 @@ Dialog::Dialog(std::unique_ptr<QWidget>&& mainWidget, QWidget* parent)
   connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
-}}} // namespace mad::utils::ui
+}}} // namespace mad::utils::gui

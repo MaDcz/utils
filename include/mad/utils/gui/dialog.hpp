@@ -6,7 +6,7 @@
 
 class QWidget;
 
-namespace mad { namespace utils { namespace ui {
+namespace mad { namespace utils { namespace gui {
 
 class Dialog : public QDialog
 {
@@ -16,4 +16,4 @@ public:
   Dialog(std::unique_ptr<QWidget>&& mainWidget, QWidget* parent = nullptr);
 };
 
-}}} // namespace mad::utils::ui
+}}} // namespace mad::utils::gui
