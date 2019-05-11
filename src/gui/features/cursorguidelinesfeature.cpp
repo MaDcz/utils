@@ -20,6 +20,8 @@ public:
 
   void paint(QPainter& painter) const override;
 
+  using MouseEventProcessor::process;
+
   void process(const MouseEvent& event) override;
 
 private:

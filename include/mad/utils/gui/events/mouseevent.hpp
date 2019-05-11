@@ -1,6 +1,6 @@
 #pragma once
 
-#include "event.hpp"
+#include "inputevent.hpp"
 
 #include <QPoint>
 
@@ -8,7 +8,7 @@ namespace mad { namespace utils { namespace gui {
 
 class MouseEventProcessor;
 
-struct MouseEvent : public Event
+struct MouseEvent : public InputEvent
 {
   enum Type
   {
@@ -20,7 +20,8 @@ struct MouseEvent : public Event
     MiddleButtonPressed,
     MiddleButtonReleased,
     RightButtonPressed,
-    RightButtonReleased
+    RightButtonReleased,
+    Wheel
   };
 
   Type type;

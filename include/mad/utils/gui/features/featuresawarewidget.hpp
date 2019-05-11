@@ -1,11 +1,13 @@
 #pragma once
 
 #include "../events/mouseevent.hpp"
+#include "../events/mousewheelevent.hpp"
 #include "feature.hpp"
 
 #include <QCursor>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QWheelEvent>
 #include <QWidget>
 
 #include <assert.h>
@@ -39,7 +41,6 @@ public:
       return;
 
     QPainter painter(this);
-
     for (auto&& feature : m_features)
     {
       assert(feature);
@@ -55,7 +56,6 @@ public:
       return;
 
     MouseEvent event(MouseEvent::Enter, mapFromGlobal(QCursor::pos()));
-
     for (auto&& feature : m_features)
     {
       assert(feature);
@@ -73,8 +73,8 @@ public:
       return;
 
     assert(ev);
-    MouseEvent uiEvent(MouseEvent::Move, ev->pos());
 
+    MouseEvent uiEvent(MouseEvent::Move, ev->pos());
     for (auto&& feature : m_features)
     {
       assert(feature);
@@ -92,7 +92,6 @@ public:
       return;
 
     MouseEvent event(MouseEvent::Leave, mapFromGlobal(QCursor::pos()));
-
     for (auto&& feature : m_features)
     {
       assert(feature);
@@ -108,6 +107,8 @@ public:
 
     if (m_features.empty())
       return;
+
+    assert(ev);
 
     auto eventType = MouseEvent::LeftButtonPressed;
     switch (ev->button())
@@ -128,7 +129,6 @@ public:
     }
 
     MouseEvent event(eventType, mapFromGlobal(QCursor::pos()));
-
     for (auto&& feature : m_features)
     {
       assert(feature);
@@ -136,6 +136,64 @@ public:
     }
 
     repaint();
+  }
+
+  void wheelEvent(QWheelEvent* ev) override
+  {
+    BaseT::wheelEvent(ev);
+
+    if (m_features.empty())
+      return;
+
+    assert(ev);
+
+    MouseWheelEvent::ScrollPhase scrollPhase = MouseWheelEvent::ScrollBegin;
+    auto qScrollPhase = ev->phase();
+    switch (ev->phase())
+    {
+    case Qt::ScrollBegin:
+      break;
+
+    case Qt::ScrollUpdate:
+    case Qt::NoScrollPhase: // If scroll phase isn't supported just rely on stepsDelta being non-zero.
+      scrollPhase = MouseWheelEvent::ScrollUpdate;
+      break;
+
+    case Qt::ScrollEnd:
+      scrollPhase = MouseWheelEvent::ScrollEnd;
+      break;
+
+    default:
+      return;
+    }
+
+    static const int angleStepSize = 15; // TODO Can we obtain this value somehow or do something else
+                                         //      to support finer resolution mouse wheels or maybe touchpad
+                                         //      gestures?
+
+    // angleDelta() is in eights of degrees and one step is normally 15 degrees. See QWheelEvent::angleDelta()
+    // documentation for details on the stepsDelta computation.
+    auto stepsDelta = ev->angleDelta().y() / 8 / angleStepSize;
+    if (stepsDelta != 0)
+    {
+      MouseWheelEvent event(scrollPhase, stepsDelta, mapFromGlobal(QCursor::pos()));
+
+      auto modifiers = ev->modifiers();
+      if (modifiers & Qt::ControlModifier)
+        event.modifiers = InputEvent::Modifier(event.modifiers | InputEvent::CtrlModifier);
+      if (modifiers & Qt::ShiftModifier)
+        event.modifiers = InputEvent::Modifier(event.modifiers | InputEvent::ShiftModifier);
+      if (modifiers & Qt::AltModifier)
+        event.modifiers = InputEvent::Modifier(event.modifiers | InputEvent::AltModifier);
+
+      for (auto&& feature : m_features)
+      {
+        assert(feature);
+        event.accept(feature->currentState());
+      }
+
+      repaint();
+    }
   }
 
 protected:

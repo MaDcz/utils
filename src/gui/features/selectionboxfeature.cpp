@@ -6,7 +6,6 @@
 #include <QPainter>
 #include <QPen>
 #include <QPoint>
-#include <QRect>
 
 namespace mad { namespace utils { namespace gui {
 
@@ -19,26 +18,28 @@ namespace mad { namespace utils { namespace gui {
 class SelectionBoxFeature::State : public Feature::State
 {
 public:
-  State(Feature& feature);
+  State(SelectionBoxFeature& feature);
 
   void paint(QPainter& painter) const override;
 
 protected:
+  SelectionBoxFeature& selectionBoxFeature();
+
   const QRect& selectionRectangle() const;
 
   void setSelectionRectangle(const QRect& rect);
 
 private:
-  QRect m_selectionRect;
+  SelectionBoxFeature& m_selectionBoxFeature;
 };
 
 class SelectionBoxFeature::IdleState : public virtual State,
                                        public virtual MouseEventProcessor
 {
 public:
-  explicit IdleState(Feature& feature);
+  explicit IdleState(SelectionBoxFeature& feature);
 
-  IdleState(const QRect& selectionRect, Feature& feature);
+  IdleState(const QRect& selectionRect, SelectionBoxFeature& feature);
 
   using State::process;
 
@@ -49,14 +50,14 @@ class SelectionBoxFeature::DragState : public virtual State,
                                        public virtual MouseEventProcessor
 {
 public:
-  DragState(const QPoint& startPos, Feature& feature);
+  DragState(const QPoint& startPos, SelectionBoxFeature& feature);
 
   using State::process;
 
   void process(const MouseEvent& event) override;
 
 private:
-  void updateSelectionRectangle(const QPoint& endPos);
+  QRect computeSelectionRectangle(const QPoint& endPos);
 
 private:
   QPoint m_startPos;
@@ -66,43 +67,49 @@ private:
 // SelectionFeature::State implementation
 //
 
-SelectionBoxFeature::State::State(Feature& feature)
-  : Feature::State(feature)
+SelectionBoxFeature::State::State(SelectionBoxFeature& feature)
+  : Feature::State(feature),
+    m_selectionBoxFeature(feature)
 {
-  assert(!m_selectionRect.isValid());
+  m_selectionBoxFeature.m_selectionRect = QRect();
 }
 
 void SelectionBoxFeature::State::paint(QPainter& painter) const
 {
-  if (m_selectionRect.isValid())
+  if (m_selectionBoxFeature.m_selectionRect.isValid())
   {
     static const auto pen = QPen(QColor(Qt::gray));
 
     painter.setPen(pen);
-    painter.drawRect(m_selectionRect);
+    painter.drawRect(m_selectionBoxFeature.m_selectionRect);
   }
+}
+
+SelectionBoxFeature& SelectionBoxFeature::State::selectionBoxFeature()
+{
+  return m_selectionBoxFeature;
 }
 
 const QRect& SelectionBoxFeature::State::selectionRectangle() const
 {
-  return m_selectionRect;
+  return m_selectionBoxFeature.m_selectionRect;
 }
 
 void SelectionBoxFeature::State::setSelectionRectangle(const QRect& rect)
 {
-  m_selectionRect = rect;
+  m_selectionBoxFeature.m_selectionRect = rect;
 }
 
 //
 // SelectionFeature::IdleState implementation
 //
 
-SelectionBoxFeature::IdleState::IdleState(Feature& feature)
+SelectionBoxFeature::IdleState::IdleState(SelectionBoxFeature& feature)
   : State(feature)
 {
 }
 
-SelectionBoxFeature::IdleState::IdleState(const QRect& selectionRect, Feature& feature)
+SelectionBoxFeature::IdleState::IdleState(const QRect& selectionRect, SelectionBoxFeature& feature)
   : IdleState(feature)
 {
   setSelectionRectangle(selectionRect);
@@ -111,14 +118,14 @@ SelectionBoxFeature::IdleState::IdleState(const QRect& selectionRect, Feature& f
 void SelectionBoxFeature::IdleState::process(const MouseEvent& event)
 {
   if (event.type == MouseEvent::LeftButtonPressed)
-    updateState(std::make_unique<DragState>(event.pos, feature()));
+    updateState(std::make_unique<DragState>(event.pos, selectionBoxFeature()));
 }
 
 //
 // SelectionFeature::DragState implementation
 //
 
-SelectionBoxFeature::DragState::DragState(const QPoint& startPos, Feature& feature)
+SelectionBoxFeature::DragState::DragState(const QPoint& startPos, SelectionBoxFeature& feature)
   : State(feature),
     m_startPos(startPos)
 {
@@ -130,12 +137,11 @@ void SelectionBoxFeature::DragState::process(const MouseEvent& event)
   switch (event.type)
   {
   case MouseEvent::Move:
-    updateSelectionRectangle(event.pos);
+    setSelectionRectangle(computeSelectionRectangle(event.pos));
     break;
 
   case MouseEvent::LeftButtonPressed:
-    updateSelectionRectangle(event.pos);
-    updateState(std::make_unique<IdleState>(selectionRectangle(), feature()));
+    updateState(std::make_unique<IdleState>(computeSelectionRectangle(event.pos), selectionBoxFeature()));
     break;
 
   default:
@@ -143,7 +149,7 @@ void SelectionBoxFeature::DragState::process(const MouseEvent& event)
   }
 }
 
-void SelectionBoxFeature::DragState::updateSelectionRectangle(const QPoint& endPos)
+QRect SelectionBoxFeature::DragState::computeSelectionRectangle(const QPoint& endPos)
 {
   QPoint topLeft, bottomRight;
 
@@ -169,7 +175,7 @@ void SelectionBoxFeature::DragState::updateSelectionRectangle(const QPoint& endP
     bottomRight.setY(m_startPos.y());
   }
 
-  setSelectionRectangle(QRect(topLeft, bottomRight));
+  return QRect(topLeft, bottomRight);
 }
 
 //
@@ -179,6 +185,11 @@ void SelectionBoxFeature::DragState::updateSelectionRectangle(const QPoint& endP
 SelectionBoxFeature::SelectionBoxFeature()
   : Feature(std::make_unique<IdleState>(*this))
 {
+}
+
+const QRect& SelectionBoxFeature::selectionRectangle() const
+{
+  return m_selectionRect;
 }
 
 }}} // namespace mad::utils::gui
