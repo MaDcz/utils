@@ -1,6 +1,7 @@
 #include "gui/features/selectionboxfeature.hpp"
 
 #include "gui/events/mouseevent.hpp"
+#include "gui/events/resizeevent.hpp"
 
 #include <QColor>
 #include <QPainter>
@@ -15,12 +16,17 @@ namespace mad { namespace utils { namespace gui {
 // SelectionFeature::DragState
 //
 
-class SelectionBoxFeature::State : public Feature::State
+class SelectionBoxFeature::State : public Feature::State,
+                                   public ResizeEventProcessor
 {
 public:
   State(SelectionBoxFeature& feature);
 
   void paint(QPainter& painter) const override;
+
+  using Feature::State::process;
+
+  void process(const ResizeEvent& event) override;
 
 protected:
   SelectionBoxFeature& selectionBoxFeature();
@@ -83,6 +89,17 @@ void SelectionBoxFeature::State::paint(QPainter& painter) const
     painter.setPen(pen);
     painter.drawRect(m_selectionBoxFeature.m_selectionRect);
   }
+}
+
+void SelectionBoxFeature::State::process(const ResizeEvent& event)
+{
+  const auto& rect = selectionRectangle();
+
+  auto xConvRatio = double(event.newSize.width()) / event.oldSize.width();
+  auto yConvRatio = double(event.newSize.height()) / event.oldSize.height();
+
+  setSelectionRectangle(QRect(int(rect.left() * xConvRatio), int(rect.top() * yConvRatio),
+          int(rect.width() * xConvRatio), int(rect.height() * yConvRatio)));
 }
 
 SelectionBoxFeature& SelectionBoxFeature::State::selectionBoxFeature()

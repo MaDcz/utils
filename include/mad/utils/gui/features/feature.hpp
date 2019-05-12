@@ -11,24 +11,10 @@ namespace mad { namespace utils { namespace gui {
 class Feature
 {
 protected:
-  class State : public virtual EventProcessor
-  {
-  public:
-    explicit State(Feature& feature);
-
-    virtual void paint(QPainter& /*painter*/) const {}
-
-  protected:
-    Feature& feature();
-
-    void updateState(std::unique_ptr<State>&& newState);
-
-  private:
-    Feature& m_feature;
-  };
+  class State;
 
 public:
-  explicit Feature(std::unique_ptr<State>&& initialState);
+  Feature(std::unique_ptr<State>&& initialState);
 
   virtual ~Feature() {}
 
@@ -39,6 +25,22 @@ private:
 
 private:
   std::unique_ptr<State> m_currentState;
+};
+
+class Feature::State : public virtual EventProcessor
+{
+public:
+  explicit State(Feature& feature);
+
+  virtual void paint(QPainter& /*painter*/) const {}
+
+protected:
+  Feature& feature();
+
+  void updateState(std::unique_ptr<State>&& newState);
+
+private:
+  Feature& m_feature;
 };
 
 }}} // namespace mad::utils::gui

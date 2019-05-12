@@ -1,7 +1,9 @@
 #pragma once
 
+#include "../events/event.hpp"
 #include "../events/mouseevent.hpp"
 #include "../events/mousewheelevent.hpp"
+#include "../events/resizeevent.hpp"
 #include "feature.hpp"
 
 #include <QCursor>
@@ -18,10 +20,10 @@
 namespace mad { namespace utils { namespace gui {
 
 template <typename BaseT, typename = std::enable_if_t<std::is_base_of<QWidget, BaseT>::value>>
-class FeaturesAwareWidget : public BaseT
+class FeaturesAwareQWidget : public BaseT
 {
 public:
-  explicit FeaturesAwareWidget(QWidget* parent = nullptr)
+  explicit FeaturesAwareQWidget(QWidget* parent = nullptr)
     : BaseT(parent)
   {
     setMouseTracking(true);
@@ -33,6 +35,17 @@ public:
     m_features.emplace_back(std::move(feature));
   }
 
+  template <typename EventT, typename = std::enable_if_t<std::is_base_of<Event, EventT>::value>>
+  void process(const EventT& event)
+  {
+    for (auto&& feature : m_features)
+    {
+      assert(feature);
+      event.accept(feature->currentState());
+    }
+  }
+
+protected:
   void paintEvent(QPaintEvent* ev) override
   {
     BaseT::paintEvent(ev);
@@ -56,12 +69,7 @@ public:
       return;
 
     MouseEvent event(MouseEvent::Enter, mapFromGlobal(QCursor::pos()));
-    for (auto&& feature : m_features)
-    {
-      assert(feature);
-      event.accept(feature->currentState());
-    }
-
+    process(event);
     repaint();
   }
 
@@ -74,13 +82,8 @@ public:
 
     assert(ev);
 
-    MouseEvent uiEvent(MouseEvent::Move, ev->pos());
-    for (auto&& feature : m_features)
-    {
-      assert(feature);
-      uiEvent.accept(feature->currentState());
-    }
-
+    MouseEvent event(MouseEvent::Move, ev->pos());
+    process(event);
     repaint();
   }
 
@@ -92,12 +95,7 @@ public:
       return;
 
     MouseEvent event(MouseEvent::Leave, mapFromGlobal(QCursor::pos()));
-    for (auto&& feature : m_features)
-    {
-      assert(feature);
-      event.accept(feature->currentState());
-    }
-
+    process(event);
     repaint();
   }
 
@@ -129,12 +127,7 @@ public:
     }
 
     MouseEvent event(eventType, mapFromGlobal(QCursor::pos()));
-    for (auto&& feature : m_features)
-    {
-      assert(feature);
-      event.accept(feature->currentState());
-    }
-
+    process(event);
     repaint();
   }
 
@@ -148,7 +141,6 @@ public:
     assert(ev);
 
     MouseWheelEvent::ScrollPhase scrollPhase = MouseWheelEvent::ScrollBegin;
-    auto qScrollPhase = ev->phase();
     switch (ev->phase())
     {
     case Qt::ScrollBegin:
@@ -186,14 +178,23 @@ public:
       if (modifiers & Qt::AltModifier)
         event.modifiers = InputEvent::Modifier(event.modifiers | InputEvent::AltModifier);
 
-      for (auto&& feature : m_features)
-      {
-        assert(feature);
-        event.accept(feature->currentState());
-      }
-
+      process(event);
       repaint();
     }
+  }
+
+  void resizeEvent(QResizeEvent* ev) override
+  {
+    BaseT::resizeEvent(ev);
+
+    if (m_features.empty())
+      return;
+
+    assert(ev);
+
+    ResizeEvent event(ev->oldSize(), ev->size());
+    process(event);
+    // Note that the resize event is triggering repainting.
   }
 
 protected:

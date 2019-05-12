@@ -13,9 +13,10 @@ set(madutils_header_files
     ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/events/inputevent.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/events/mouseevent.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/events/mousewheelevent.hpp
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/events/resizeevent.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/features/cursorguidelinesfeature.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/features/feature.hpp
-    ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/features/featuresawarewidget.hpp
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/features/featuresawareqwidget.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/features/selectionboxfeature.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/features/zoomfeature.hpp)
 
@@ -25,6 +26,7 @@ set(madutils_source_files
     ${PROJECT_SOURCE_DIR}/src/gui/events/event.cpp
     ${PROJECT_SOURCE_DIR}/src/gui/events/mouseevent.cpp
     ${PROJECT_SOURCE_DIR}/src/gui/events/mousewheelevent.cpp
+    ${PROJECT_SOURCE_DIR}/src/gui/events/resizeevent.cpp
     ${PROJECT_SOURCE_DIR}/src/gui/features/cursorguidelinesfeature.cpp
     ${PROJECT_SOURCE_DIR}/src/gui/features/feature.cpp
     ${PROJECT_SOURCE_DIR}/src/gui/features/selectionboxfeature.cpp
