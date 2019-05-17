@@ -4,6 +4,7 @@
 
 #include <memory>
 
+class QAction;
 class QPainter;
 
 namespace mad { namespace utils { namespace gui {
@@ -17,6 +18,8 @@ public:
   Feature(std::unique_ptr<State>&& initialState);
 
   virtual ~Feature() {}
+
+  virtual QAction* action();
 
   State& currentState();
 

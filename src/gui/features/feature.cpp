@@ -33,6 +33,11 @@ Feature::Feature(std::unique_ptr<State>&& initialState)
   assert(m_currentState);
 }
 
+QAction* Feature::action()
+{
+  return nullptr;
+}
+
 Feature::State& Feature::currentState()
 {
   assert(m_currentState);
