@@ -39,7 +39,7 @@ void ZoomFeature::State::process(const MouseWheelEvent& event)
   if (event.modifiers != InputEvent::CtrlModifier)
     return;
 
-  m_zoomFeature.increaseZoom(event.stepsDelta);
+  m_zoomFeature.increaseZoom(event.stepsDelta, event.pos);
 }
 
 //
