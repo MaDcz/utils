@@ -7,8 +7,8 @@ find_package(Qt5Widgets)
 set(CMAKE_AUTOMOC ON)
 
 set(madutils_header_files
-    ${PROJECT_SOURCE_DIR}/include/mad/utils/scopedtrigger.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/dialog.hpp
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/dialogbuttonboxfactory.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/events/event.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/events/inputevent.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/events/mouseevent.hpp
@@ -18,11 +18,18 @@ set(madutils_header_files
     ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/features/feature.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/features/featuresawareqwidget.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/features/selectionboxfeature.hpp
-    ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/features/zoomfeature.hpp)
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/features/zoomfeature.hpp
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/filebrowsewidgetfactory.hpp
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/layoutarranger.hpp
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/singlepartwidgetfactory.hpp
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/widgetpartscollection.hpp
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/gui/widgetfactory.hpp
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/flags.hpp
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/scopedtrigger.hpp)
 
 set(madutils_source_files
-    ${PROJECT_SOURCE_DIR}/src/scopedtrigger.cpp
     ${PROJECT_SOURCE_DIR}/src/gui/dialog.cpp
+    ${PROJECT_SOURCE_DIR}/src/gui/dialogbuttonboxfactory.cpp
     ${PROJECT_SOURCE_DIR}/src/gui/events/event.cpp
     ${PROJECT_SOURCE_DIR}/src/gui/events/mouseevent.cpp
     ${PROJECT_SOURCE_DIR}/src/gui/events/mousewheelevent.cpp
@@ -30,7 +37,10 @@ set(madutils_source_files
     ${PROJECT_SOURCE_DIR}/src/gui/features/cursorguidelinesfeature.cpp
     ${PROJECT_SOURCE_DIR}/src/gui/features/feature.cpp
     ${PROJECT_SOURCE_DIR}/src/gui/features/selectionboxfeature.cpp
-    ${PROJECT_SOURCE_DIR}/src/gui/features/zoomfeature.cpp)
+    ${PROJECT_SOURCE_DIR}/src/gui/features/zoomfeature.cpp
+    ${PROJECT_SOURCE_DIR}/src/gui/filebrowsewidgetfactory.cpp
+    ${PROJECT_SOURCE_DIR}/src/gui/layoutarranger.cpp
+    ${PROJECT_SOURCE_DIR}/src/scopedtrigger.cpp)
 
 add_library(madutils STATIC ${madutils_header_files} ${madutils_source_files})
 
