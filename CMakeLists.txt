@@ -7,6 +7,10 @@ find_package(Qt5Widgets)
 set(CMAKE_AUTOMOC ON)
 
 set(madutils_header_files
+    ${PROJECT_SOURCE_DIR}/include/mad/imageacquisition.hpp
+    ${PROJECT_SOURCE_DIR}/include/mad/imageacquisition/device.hpp
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/flags.hpp
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/scopedtrigger.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/dialog.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/dialogbuttonboxfactory.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/events/event.hpp
@@ -23,11 +27,10 @@ set(madutils_header_files
     ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/layoutarranger.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/singlepartwidgetfactory.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/widgetpartscollection.hpp
-    ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/widgetfactory.hpp
-    ${PROJECT_SOURCE_DIR}/include/mad/utils/flags.hpp
-    ${PROJECT_SOURCE_DIR}/include/mad/utils/scopedtrigger.hpp)
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/widgetfactory.hpp)
 
 set(madutils_source_files
+    ${PROJECT_SOURCE_DIR}/src/scopedtrigger.cpp
     ${PROJECT_SOURCE_DIR}/src/ui/dialog.cpp
     ${PROJECT_SOURCE_DIR}/src/ui/dialogbuttonboxfactory.cpp
     ${PROJECT_SOURCE_DIR}/src/ui/events/event.cpp
@@ -39,8 +42,7 @@ set(madutils_source_files
     ${PROJECT_SOURCE_DIR}/src/ui/features/selectionboxfeature.cpp
     ${PROJECT_SOURCE_DIR}/src/ui/features/zoomfeature.cpp
     ${PROJECT_SOURCE_DIR}/src/ui/filebrowsewidgetfactory.cpp
-    ${PROJECT_SOURCE_DIR}/src/ui/layoutarranger.cpp
-    ${PROJECT_SOURCE_DIR}/src/scopedtrigger.cpp)
+    ${PROJECT_SOURCE_DIR}/src/ui/layoutarranger.cpp)
 
 add_library(madutils STATIC ${madutils_header_files} ${madutils_source_files})
 
