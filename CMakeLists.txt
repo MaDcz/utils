@@ -27,7 +27,8 @@ set(madutils_header_files
     ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/layoutarranger.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/singlepartwidgetfactory.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/widgetpartscollection.hpp
-    ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/widgetfactory.hpp)
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/widgetfactory.hpp
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/unused.hpp)
 
 set(madutils_source_files
     ${PROJECT_SOURCE_DIR}/src/scopedtrigger.cpp
