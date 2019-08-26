@@ -11,7 +11,7 @@
 namespace mad { namespace utils { namespace ui {
 
 /**
- * A widget factory that creates a \c QDialogButtonBox allowing for buttons configuration.
+ * @brief A widget factory that creates a @c QDialogButtonBox allowing for buttons configuration.
  */
 class DialogButtonBoxFactory : public SinglePartWidgetFactory
 {
@@ -21,7 +21,7 @@ public:
   explicit DialogButtonBoxFactory(std::initializer_list<QDialogButtonBox::StandardButton> buttons);
 
   /**
-   * Adds a standard to the consequently built button boxes.
+   * @brief Adds a standard button to the consequently built button boxes.
    */
   void addButton(QDialogButtonBox::StandardButton button, const QString& text = {});
 

@@ -3,7 +3,7 @@
 #include <QWidget>
 
 #include <assert.h>
-#include <map>
+#include <unordered_map>
 #include <memory>
 #include <stdexcept>
 #include <vector>
@@ -33,6 +33,8 @@ public:
    */
   void add(typename WidgetFactoryT::Part partFlag, std::unique_ptr<QWidget>&& part);
 
+  QWidget* get(typename WidgetFactoryT::Part partFlag);
+
   /**
    * Returns the number of parts in the collection.
    */
@@ -50,7 +52,7 @@ public:
 
 private:
   std::vector<std::unique_ptr<QWidget>> m_parts;
-  std::map<typename WidgetFactoryT::Part, QWidget*> m_partsByFlags;
+  std::unordered_map<typename WidgetFactoryT::Part, QWidget*> m_partsByFlags;
 };
 
 template <typename WidgetFactoryT>
@@ -64,6 +66,13 @@ inline void WidgetPartsCollection<WidgetFactoryT>::add(typename WidgetFactoryT::
 
   m_partsByFlags[partFlag] = part.get();
   m_parts.push_back(std::move(part));
+}
+
+template <typename WidgetFactoryT>
+inline QWidget* WidgetPartsCollection<WidgetFactoryT>::get(typename WidgetFactoryT::Part partFlag)
+{
+  auto it = m_partsByFlags.find(partFlag);
+  return it != m_partsByFlags.end() ? it->second : nullptr;
 }
 
 template <typename WidgetFactoryT>

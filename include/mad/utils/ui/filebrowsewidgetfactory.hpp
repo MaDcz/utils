@@ -24,13 +24,14 @@ public:
   {
     EditBoxPart       = 1 << 0,
     BrowseButtonPart  = 1 << 1,
+    DefaultParts      = EditBoxPart | BrowseButtonPart,
     AllParts          = EditBoxPart | BrowseButtonPart
   };
 
   using Parts = Flags<Part>;
 
 public:
-  explicit FileBrowseWidgetFactory(const Parts& partFlags = EditBoxPart | BrowseButtonPart);
+  explicit FileBrowseWidgetFactory(const Parts& partFlags = DefaultParts);
 
   /**
    * @brief Returns part flags.
