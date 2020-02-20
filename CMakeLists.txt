@@ -25,6 +25,7 @@ set(madutils_header_files
     ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/features/zoomfeature.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/filebrowsewidgetfactory.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/layoutarranger.hpp
+    ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/multiactionpushbutton.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/singlepartwidgetfactory.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/widgetpartscollection.hpp
     ${PROJECT_SOURCE_DIR}/include/mad/utils/ui/widgetfactory.hpp
@@ -43,7 +44,8 @@ set(madutils_source_files
     ${PROJECT_SOURCE_DIR}/src/ui/features/selectionboxfeature.cpp
     ${PROJECT_SOURCE_DIR}/src/ui/features/zoomfeature.cpp
     ${PROJECT_SOURCE_DIR}/src/ui/filebrowsewidgetfactory.cpp
-    ${PROJECT_SOURCE_DIR}/src/ui/layoutarranger.cpp)
+    ${PROJECT_SOURCE_DIR}/src/ui/layoutarranger.cpp
+    ${PROJECT_SOURCE_DIR}/src/ui/multiactionpushbutton.cpp)
 
 add_library(madutils STATIC ${madutils_header_files} ${madutils_source_files})
 

@@ -111,7 +111,7 @@ inline void Flags<EnumT>::unset(EnumT flag)
 template <typename EnumT>
 inline bool Flags<EnumT>::isSet(EnumT flag) const
 {
-  return m_flags & flag;
+  return int(m_flags) & int(flag);
 }
 
 template <typename EnumT>
