@@ -26,7 +26,7 @@ public:
   explicit FeaturesAwareQWidget(QWidget* parent = nullptr)
     : BaseT(parent)
   {
-    setMouseTracking(true);
+    this->setMouseTracking(true);
   }
 
   void addFeature(std::unique_ptr<Feature>&& feature)
@@ -68,9 +68,9 @@ protected:
     if (m_features.empty())
       return;
 
-    MouseEvent event(MouseEvent::Enter, mapFromGlobal(QCursor::pos()));
+    MouseEvent event(MouseEvent::Enter, this->mapFromGlobal(QCursor::pos()));
     process(event);
-    repaint();
+    this->repaint();
   }
 
   void mouseMoveEvent(QMouseEvent* ev) override
@@ -84,7 +84,7 @@ protected:
 
     MouseEvent event(MouseEvent::Move, ev->pos());
     process(event);
-    repaint();
+    this->repaint();
   }
 
   void leaveEvent(QEvent* ev) override
@@ -94,9 +94,9 @@ protected:
     if (m_features.empty())
       return;
 
-    MouseEvent event(MouseEvent::Leave, mapFromGlobal(QCursor::pos()));
+    MouseEvent event(MouseEvent::Leave, this->mapFromGlobal(QCursor::pos()));
     process(event);
-    repaint();
+    this->repaint();
   }
 
   void mousePressEvent(QMouseEvent* ev) override
@@ -126,9 +126,9 @@ protected:
       return;
     }
 
-    MouseEvent event(eventType, mapFromGlobal(QCursor::pos()));
+    MouseEvent event(eventType, this->mapFromGlobal(QCursor::pos()));
     process(event);
-    repaint();
+    this->repaint();
   }
 
   void wheelEvent(QWheelEvent* ev) override
@@ -168,7 +168,7 @@ protected:
     auto stepsDelta = ev->angleDelta().y() / 8 / angleStepSize;
     if (stepsDelta != 0)
     {
-      MouseWheelEvent event(scrollPhase, stepsDelta, mapFromGlobal(QCursor::pos()));
+      MouseWheelEvent event(scrollPhase, stepsDelta, this->mapFromGlobal(QCursor::pos()));
 
       auto modifiers = ev->modifiers();
       if (modifiers & Qt::ControlModifier)
@@ -179,7 +179,7 @@ protected:
         event.modifiers = InputEvent::Modifier(event.modifiers | InputEvent::AltModifier);
 
       process(event);
-      repaint();
+      this->repaint();
     }
   }
 
